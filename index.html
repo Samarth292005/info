@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Food</h1>
+        <div class="menu-item">
+            <span>Pizza</span>
+            <button onclick="addToCart('Pizza')">Add to Cart</button>
+        </div>
+        <div class="menu-item">
+            <span>Burger</span>
+            <button onclick="addToCart('Burger')">Add to Cart</button>
+        </div>
+        <div class="menu-item">
+            <span>Pasta</span>
+            <button onclick="addToCart('Pasta')">Add to Cart</button>
+        </div>
+        <h2>Cart</h2>
+        <ul id="cart"></ul>
+        <button onclick="placeOrder()">Place Order</button>
+    </div>
+    <script>
+        const cart = [];
+
+        function addToCart(item) {
+            cart.push(item);
+            document.getElementById("cart").innerHTML = cart.map(food => `<li>${food}</li>`).join("");
+        }
+
+        function placeOrder() {
+            fetch('/place-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order: cart })
+            })
+            .then(response => response.json())
+            .then(data => alert(data.message))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
